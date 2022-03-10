@@ -128,6 +128,7 @@ func main() {
 
 docker pull {{ .Target }}
 docker tag {{ .Target }} {{ .Source }}
+docker tag {{ .Target }} xx-registry/{{ .Source }}
 
 {{ end -}}`)
 	if err != nil {
