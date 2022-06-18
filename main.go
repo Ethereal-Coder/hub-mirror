@@ -29,7 +29,9 @@ func main() {
 
 	fmt.Println("验证原始镜像内容")
 	var hubMirrors struct {
-		Content []string `json:"hub-mirror"`
+		Content []string `json:"hub-mirror"`,
+		// tag时如果镜像后缀是sha256时，使用version替代
+		Version string `json:"version"`
 	}
 	err := json.Unmarshal([]byte(*content), &hubMirrors)
 	if err != nil {
@@ -71,13 +73,25 @@ func main() {
 	}, 0)
 
 	wg := sync.WaitGroup{}
+	
+	if hubMirrors.Version == "" {
+		hubMirrors.Version = "latest"
+	}
 
 	for _, source := range hubMirrors.Content {
 		if source == "" {
 			continue
 		}
-
-		target := *username + "/" + strings.ReplaceAll(source, "/", ".")
+		
+		index := strings.Index(source, "@sha256")
+		var target string
+		if index != -1 {
+			runes := []rune(source)
+			safeSubstring := string(runes[0:index])
+			target = *username + "/" + strings.ReplaceAll(source, "/", ".") + ":" + hubMirrors.Version
+		}else {
+			target = *username + "/" + strings.ReplaceAll(source, "/", ".")
+		}
 
 		wg.Add(1)
 		go func(source, target string) {
