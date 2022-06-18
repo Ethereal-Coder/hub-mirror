@@ -29,7 +29,7 @@ func main() {
 
 	fmt.Println("验证原始镜像内容")
 	var hubMirrors struct {
-		Content []string `json:"hub-mirror"`,
+		Content []string `json:"hub-mirror"`
 		// tag时如果镜像后缀是sha256时，使用version替代
 		Version string `json:"version"`
 	}
