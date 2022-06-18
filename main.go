@@ -88,7 +88,7 @@ func main() {
 		if index != -1 {
 			runes := []rune(source)
 			safeSubstring := string(runes[0:index])
-			target = *username + "/" + strings.ReplaceAll(source, "/", ".") + ":" + hubMirrors.Version
+			target = *username + "/" + strings.ReplaceAll(safeSubstring, "/", ".") + ":" + hubMirrors.Version
 		}else {
 			target = *username + "/" + strings.ReplaceAll(source, "/", ".")
 		}
